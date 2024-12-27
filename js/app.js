@@ -1,4 +1,4 @@
-// Selección de elementos del DOM
+
 const formulario = document.querySelector('.formulario');
 const divisasContainer = document.querySelector(".divisas-container");
 const precioTotal = document.querySelector(".info-total");
@@ -11,20 +11,19 @@ intercambioImg.addEventListener("click", intercambiarMonedas);
 const dataDivisas = [];
 let conversionRates = {};
 
-// Evento para el formulario
+
 formulario.addEventListener("submit", (e) => {
     e.preventDefault();
     llenarSelects();
 });
 
-// Función para obtener las divisas desde la API
 async function apiDivisas() {
     const url = "https://v6.exchangerate-api.com/v6/15fd308857e4a72c49dc791b/latest/USD";
     try {
         const response = await fetch(url);
         const data = await response.json();
 
-        // Verificar si se obtuvieron datos válidos
+        
         if (data && data.conversion_rates) {
             conversionRates = data.conversion_rates; // Guardar las tasas de conversión
             llenarSelects();
@@ -36,17 +35,17 @@ async function apiDivisas() {
     }
 }
 
-// Llenar los selects dinámicamente con las divisas
-function llenarSelects() {
-    divisasContainer.innerHTML = ""; // Limpiar contenedor
 
-    // Crear los dos selects
+function llenarSelects() {
+    divisasContainer.innerHTML = ""; 
+
+    
     const selectA = document.createElement("select");
     const selectB = document.createElement("select");
     selectA.classList.add("select-pais");
     selectB.classList.add("select-pais");
 
-    // Agregar opciones de divisas
+
     Object.entries(conversionRates).forEach(([currency]) => {
         const optionA = document.createElement("option");
         const optionB = document.createElement("option");
@@ -61,19 +60,19 @@ function llenarSelects() {
         selectB.appendChild(optionB);
     });
 
-    // Agregar selects al contenedor
+    
     divisasContainer.appendChild(selectA);
     divisasContainer.appendChild(selectB);
 
-    // Escuchar cambios en los selects
+    
     selectA.addEventListener("change", calcularConversion);
     selectB.addEventListener("change", calcularConversion);
 
-    // Escuchar cambios en los inputs
+    
     precioA.addEventListener("input", calcularConversion);
 }
 
-// Calcular la conversión de divisas
+
 function calcularConversion() {
     const monedaA = divisasContainer.querySelectorAll(".select-pais")[0].value;
     const monedaB = divisasContainer.querySelectorAll(".select-pais")[1].value;
@@ -81,8 +80,8 @@ function calcularConversion() {
     const cantidad = parseFloat(precioA.value);
 
     if (!monedaA || !monedaB || isNaN(cantidad)) {
-        precioB.value = ""; // Limpiar input si faltan datos
-        precioTotal.textContent = "N/A"; // Actualizar mensaje
+        precioB.value = ""; 
+        precioTotal.textContent = "N/A";
         return;
     }
 
@@ -95,17 +94,14 @@ function calcularConversion() {
     precioTotal.textContent = `${resultado.toFixed(2)} ${monedaB}`; // Actualizar resultado en `precioTotal`
 }
 
-// Función para intercambiar las monedas
 function intercambiarMonedas() {
-    // Obtener los selects
+    
     const selectA = divisasContainer.querySelectorAll(".select-pais")[0];
     const selectB = divisasContainer.querySelectorAll(".select-pais")[1];
 
-    // Obtener los valores seleccionados
     const monedaA = selectA.value;
     const monedaB = selectB.value;
 
-    // Intercambiar los valores
     selectA.value = monedaB;
     selectB.value = monedaA;
 
